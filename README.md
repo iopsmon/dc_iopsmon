@@ -102,7 +102,7 @@ Example - Add the below assets to the csv file - base this on your enviroment
 - splunk,s1hf1.ops.com,linux,192.168.0.109,heavy_forwarder,medium
 - ad,DC2,windows,192.168.0.1,ad_server,high
 
-NOTe:Please note the host names in the metrics dashboard drop down mush match the host name in the csv file
+NOTE:Please note the host names in the metrics dashboard drop down mush match the host name in the csv file
 
 Use:
 Login to Splunk and go DC_linux_monitoring app and select dashboards, select the host and you should see the you should see data, this is providing you have installed the TA's and data is being collected and ingested correctly.
