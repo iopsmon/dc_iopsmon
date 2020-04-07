@@ -104,5 +104,13 @@ Example - Add the below assets to the csv file - base this on your enviroment
 
 NOTE:Please note the host names in the metrics dashboard drop down mush match the host name in the csv file
 
+Data model - optional
+Accelerate the Compute_Inventory and add the index's that store the CIM complaint data for Linux and Windows servers, the TA's required for these are listed below (These are NOT the metrics indexes), these require considerations for the indexes and collects
+
+- https://splunkbase.splunk.com/app/4856/ (Windows TA - this is the same TA as mentioned before)
+- https://splunkbase.splunk.com/app/833/  (Unix/Linux TA - this is not the metrics TA)
+
+If dont have the Unix/Linux TA and configure the other OS indexes for non metric data, you will not get the basic inventory data.
+
 Use:
 Login to Splunk and go DC_linux_monitoring app and select dashboards, select the host and you should see the you should see data, this is providing you have installed the TA's and data is being collected and ingested correctly.
