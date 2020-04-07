@@ -15,7 +15,7 @@ The Metrics I'm collecting are as follows, and based on average values only, thi
 - Memory – Memory is used by many applications and is a key componenet for the proper function of providing services
 - Swap Memory – This is virtual memory created by the system and allocated to disk to be used when necessary. Its high utilization can indicate that the amount of memory for the server is     insufficient.
 
-![](images/linux_mon.jpg)
+![](images/iopsmon.jpg)
 
 Dashboard Features:
 
