@@ -98,9 +98,9 @@ You will need to run chmod +x for the shell scripts to run in /bin
 Edit the iops_services.csv and create the services
 
 Example - Add the below assets to the csv file - base this on your enviroment
-it_service,host,system,ip,service_role,critical
-splunk,s1hf1.ops.com,linux,192.168.0.109,heavy_forwarder,medium
-ad,DC2,windows,192.168.0.1,ad_server,high
+- it_service,host,system,ip,service_role,critical
+- splunk,s1hf1.ops.com,linux,192.168.0.109,heavy_forwarder,medium
+- ad,DC2,windows,192.168.0.1,ad_server,high
 
 NOTe:Please note the host names in the metrics dashboard drop down mush match the host name in the csv file
 
