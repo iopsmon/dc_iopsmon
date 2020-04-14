@@ -1,6 +1,6 @@
 iOpsmon System Monitoring
 
-This apps provides basic Linux and Windows Server Monitoring using metrics in Splunk
+This apps provides basic Linux and Windows systems monitoring and web site checks
 
 The App allows you to monitor Linux and Windows System using metrics. It further provides information on the service and some inventory information. Its best suited to smaller enviroemnts where you want to monitor a small number of services. So say all your critical services as a staring point.
 
@@ -40,6 +40,12 @@ Windows Metrics
 - Pages/sec
 - Bytes Total/sec
 
+Web Site Monitoring
+
+You can add a some web sites to the configuration and the app will poll every 5 minutes for an up down status. just add the URL, such as http:test.com/test.html and in 5 minutes you should see data coming through
+
+![](images/webmon.jpg)
+
 Application Features:
 
 - Collects metrics with out using collectd (uses the Windows TA and Linux Metrics TA)
@@ -47,6 +53,7 @@ Application Features:
 - Uses the Analytics Workspace (Only available with Splunk 7.1 +) - So Upgrade!
 - Uses Compute_Inventory data model for basic Inventory (optional)
 - Add service level informaition to host metric dashboard, which provides context
+- monitors URLS - basic up / down status 
 
 Data Config:
 - Metric Data
@@ -55,20 +62,27 @@ Data Config:
 - index=windows_metric
 - index size = 500MB
 
-Script for Data:-
+- Metric Data
+- data kept for 14 days
+- index=webmon
+- sourcetype=webmon:log  
+- index size = 500MB
 
 Dependecies:
 The app uses the TA-linux-metrics app, https://splunkbase.splunk.com/app/4856/ this uses a number of shell scripts, yes good old shell scripts....this collects the metric data and sends them to the metrics index linux_metric. You dont need collectd or any thirdparty tool, just deploy the TA-linux-metrics app to the target servers running the UF.
 
 This app requires the Windows TA app https://splunkbase.splunk.com/app/742/ - uses uses perfmon counters which send data to the windows metric index
 
+Optionally if you download the CIM and enable the Compute_Inventory data model, the app will show some inventory level information
+
 Requirements:
+- Universal Forwarder Agents - https://www.splunk.com/en_us/download/splunk-enterprise.html 
 - Splunk 7.1 + (Metrics Workspace)
 - TA-linux-metrics
 - Windows TA
 - Metrics Indexes
 
-Versions
+Versions Used
 - Splunk = 8.01
 - Windows TA = Version 8.0 - https://splunkbase.splunk.com/app/4856/
 - Linux Metrics TA - Version 1.0.3  - https://splunkbase.splunk.com/app/742/ 
@@ -112,5 +126,17 @@ Accelerate the Compute_Inventory and add the index's that store the CIM complain
 
 If dont have the Unix/Linux TA and configure the other OS indexes for non metric data, you will not get the basic inventory data.
 
+Web Site Monitoring Config
+
+Add the urls you want to monitor, start with a few to get it working.
+Edit the /opt/splunk/etc/apps/DC_iops_monitoring/bin/scripts/url.conf file
+
 Use:
 Login to Splunk and go DC_linux_monitoring app and select dashboards, select the host and you should see the you should see data, this is providing you have installed the TA's and data is being collected and ingested correctly.
+
+Issues:
+- Ensure the app has the splunk user permissions
+- Ensure the scripts under the bin folder change run - chmod +x
+
+Support:
+None - This is a free app that I developed for my own purpose, but it's great if you want to use Splunk for free, so if you want to use it, test it in a develpoment enviroment first

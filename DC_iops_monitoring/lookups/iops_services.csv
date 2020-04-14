@@ -1,9 +1,2 @@
 it_service,host,system,ip,service_role,critical
-splunk,s1hf1.ops.com,linux,192.168.0.109,heavy_forwarder,medium
-splunk,s1idx1.ops.com,linux,192.168.0.102,indexer,high
-splunk,s1idx2.ops.com,linux,192.168.0.103,indexer,high
-splunk,s1sh1.ops.com,linux,192.168.0.106,search_head,medium
-splunk,s1mc.ops.com,linux,192.168.0.112,monitoring_console,low
-splunk,s1deployment1.ops.com,linux,192.168.0.106,deployment_server,low
-ad,DC2,windows,192.168.0.1,ad_server,high
-test,wintest,windows,192.168.0.121,dev_server,low
+splunk,splunk2.ops.com,linux,192.168.1.128,aio,medium

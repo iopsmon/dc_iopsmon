@@ -2,6 +2,7 @@
 
 <view name="win_mon" default='true'/>
 <view name="lin_mon" />
+<view name="web_mon" />
 <view name="search" />
 <view name="reports" />
 <view name="dashboards" />

@@ -1,3 +1,4 @@
+#These are the metric indexes, create these on the indexers
 [windows_metric]
 homePath = $SPLUNK_DB/windows_metric/db
 coldPath = $SPLUNK_DB/windows_metric/colddb
@@ -14,3 +15,12 @@ thawedPath = $SPLUNK_DB/linux_metric/thaweddb
 datatype = metric
 frozenTimePeriodInSecs = 345600
 repFactor = auto
+
+#This is for the web monitoring index - create this on the indexes
+
+[webmon]
+homePath = volume:$SPLUNK_DB/webmon/db
+coldPath = volume:$SPLUNK_DB/webmon/colddb
+thawedPath = $SPLUNK_DB/webmon/thaweddb
+tstatsHomePath = volume:summary/webmon/datamodel_summary
+frozenTimePeriodInSecs =345600
