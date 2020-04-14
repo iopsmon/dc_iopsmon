@@ -22,6 +22,7 @@ The Metrics I'm collecting are as follows, and based on average values only, thi
 Metrics:
 
 Linux Metrics
+
 - cpu.system
 - load.longterm
 - memory.used
@@ -33,6 +34,7 @@ Linux Metrics
 - processmon.cpu.percent
 
 Windows Metrics
+
 - Processor Time
 - Processor Queue Length
 - Available MBytes
@@ -54,10 +56,11 @@ Application Features:
 - Uses metrics indexes - optimsed for metric data
 - Uses the Analytics Workspace (Only available with Splunk 7.1 +) - So Upgrade!
 - Uses Compute_Inventory data model for basic Inventory (optional)
-- Add service level informaition to host metric dashboard, which provides context
-- monitors URLS - basic up / down status 
+- Add service level information to host metric dashboard, which provides context
+- monitors URLS - basic up / down status
 
 Data Config:
+
 - Metric Data
 - data kept for 14 days
 - index=linux_metric
@@ -65,6 +68,7 @@ Data Config:
 - index size = 500MB
 
 Web Monitoring Data:
+
 - data kept for 14 days
 - index=webmon
 - sourcetype=webmon:log  
@@ -78,19 +82,22 @@ This app requires the Windows TA app https://splunkbase.splunk.com/app/742/ - us
 Optionally if you download the CIM and enable the Compute_Inventory data model, the app will show some inventory level information
 
 Requirements:
+
 - Universal Forwarder Agents - https://www.splunk.com/en_us/download/splunk-enterprise.html
 - Splunk 7.1 + (Metrics Workspace)
 - TA-linux-metrics
 - Windows TA
 - Metrics Indexes
 
-Versions Used
+Versions Used:
+
 - Splunk = 8.01
 - Windows TA = Version 8.0 - https://splunkbase.splunk.com/app/4856/
 - Linux Metrics TA - Version 1.0.3  - https://splunkbase.splunk.com/app/742/ 
 - CIM = 4.15 - https://splunkbase.splunk.com/app/1621/  
 
 Indexes config:
+
 - Configrue the indexes that are set in the indexes.conf.create file 
 
 Install:
@@ -118,6 +125,7 @@ Services Config:
 Edit the iops_services.csv to create the services info, think about your systems and what service they belong to
 
 Example - Add the below assets to the csv file - base this on your enviroment
+
 - it_service,host,system,ip,service_role,critical
 - splunk,s1hf1.ops.com,linux,192.168.0.109,heavy_forwarder,medium
 - ad,DC2,windows,192.168.0.1,ad_server,high
@@ -141,6 +149,7 @@ Use:
 Login to Splunk and go DC_linux_monitoring app and select dashboards, select the host and you should see the you should see data, this is providing you have installed the TA's and data is being collected and ingested correctly.
 
 Issues:
+
 - Ensure the app has the splunk user permissions
 - Ensure the scripts under the bin folder change run - chmod +x
 - Ensure you have deployed and configured the Windows and Linux TA's to collect the metric data and set the correct indexes - see the file called indexes.conf.create
