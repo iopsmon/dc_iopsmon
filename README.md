@@ -1,8 +1,10 @@
-iOpsmon System Monitoring
+iOpsmon Monitoring
 
 This apps provides basic Linux and Windows systems monitoring and web site checks
 
-The App allows you to monitor Linux and Windows System using metrics. It further provides information on the service and some inventory information. Its best suited to smaller enviroemnts where you want to monitor a small number of services. So say all your critical services as a staring point.
+The App allows you to monitor Linux and Windows System using metrics. It further provides information on the service and some inventory information. Its best suited to smaller environment  where you want to monitor a small number of services. So say all your critical services as a staring point.
+
+The app will give you what service the system being monitored belongs to, so this could be a web server, email, proxy etc, this helps identify if the system is part of a critical service or not.
 
 For this app, I have set the polling for every 5 minutes and based it on averages, this is best and most optimised way of getting some metric data in quickly, and viewing the data. Do you really need every second for eveyr metric!..for software developers perhaps yes, but not for admins and service health checks.
 
@@ -76,7 +78,7 @@ This app requires the Windows TA app https://splunkbase.splunk.com/app/742/ - us
 Optionally if you download the CIM and enable the Compute_Inventory data model, the app will show some inventory level information
 
 Requirements:
-- Universal Forwarder Agents - https://www.splunk.com/en_us/download/splunk-enterprise.html 
+- Universal Forwarder Agents - https://www.splunk.com/en_us/download/splunk-enterprise.html
 - Splunk 7.1 + (Metrics Workspace)
 - TA-linux-metrics
 - Windows TA
@@ -87,6 +89,9 @@ Versions Used
 - Windows TA = Version 8.0 - https://splunkbase.splunk.com/app/4856/
 - Linux Metrics TA - Version 1.0.3  - https://splunkbase.splunk.com/app/742/ 
 - CIM = 4.15 - https://splunkbase.splunk.com/app/1621/  
+
+Indexes config:
+- Configrue the indexes that are set in the indexes.conf.create file 
 
 Install:
 
@@ -109,7 +114,7 @@ The polling can be adjusted in the inputs.conf in the TA-linux-metrics, the data
 
 You will need to run chmod +x for the shell scripts to run in /bin  
 
-Edit the iops_services.csv and create the services
+Edit the iops_services.csv to create the services info, think about your systems and what service they belong to
 
 Example - Add the below assets to the csv file - base this on your enviroment
 - it_service,host,system,ip,service_role,critical
@@ -137,6 +142,7 @@ Login to Splunk and go DC_linux_monitoring app and select dashboards, select the
 Issues:
 - Ensure the app has the splunk user permissions
 - Ensure the scripts under the bin folder change run - chmod +x
+- Ensure you have deployed and configured the Windows and Linux TA's to collect the metric data and set the correct indexes - see the file called indexes.conf.create
 
 Support:
-None - This is a free app that I developed for my own purpose, but it's great if you want to use Splunk for free, so if you want to use it, test it in a develpoment enviroment first
+None - This is a free app that I developed for my own purpose, but it's great if you want to use Splunk for free, so if you want to use it, test it in a develpoment enviroment first.
