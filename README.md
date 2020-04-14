@@ -64,13 +64,13 @@ Data Config:
 - index=windows_metric
 - index size = 500MB
 
-- Metric Data
+Web Monitoring Data:
 - data kept for 14 days
 - index=webmon
 - sourcetype=webmon:log  
 - index size = 500MB
 
-Dependecies:
+App Dependecies:
 The app uses the TA-linux-metrics app, https://splunkbase.splunk.com/app/4856/ this uses a number of shell scripts, yes good old shell scripts....this collects the metric data and sends them to the metrics index linux_metric. You dont need collectd or any thirdparty tool, just deploy the TA-linux-metrics app to the target servers running the UF.
 
 This app requires the Windows TA app https://splunkbase.splunk.com/app/742/ - uses uses perfmon counters which send data to the windows metric index
@@ -108,12 +108,13 @@ Install the TA-linux-metrics to the UF (Configure the polling or  use the Deploy
 
 Install the Windows TA to the UF (Configure the polling or  use the Deployment server for multiple server deployment)
 
-Config:
+Metric Config:
 
-The polling can be adjusted in the inputs.conf in the TA-linux-metrics, the data will be sent to index=linux_metric, this can be changed if required.
+The polling can be adjusted in the inputs.conf in the TA-linux-metrics and Splunk_TA_windows , the data should be sent to index=linux_metric for linux data and index=windows_metric for Windows data, this can be changed if required, but leave as is to get it running.
 
 You will need to run chmod +x for the shell scripts to run in /bin  
 
+Services Config:
 Edit the iops_services.csv to create the services info, think about your systems and what service they belong to
 
 Example - Add the below assets to the csv file - base this on your enviroment
@@ -145,4 +146,4 @@ Issues:
 - Ensure you have deployed and configured the Windows and Linux TA's to collect the metric data and set the correct indexes - see the file called indexes.conf.create
 
 Support:
-None - This is a free app that I developed for my own purpose, but it's great if you want to use Splunk for free, so if you want to use it, test it in a develpoment enviroment first.
+None - This is a free app that I developed for my own purpose, but it's great if you want to use Splunk for free, so if you want to use it, test it in a develpoment enviroment first
