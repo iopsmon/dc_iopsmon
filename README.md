@@ -1,6 +1,6 @@
 iOpsmon Monitoring
 
-This apps provides basic Linux and Windows systems performance monitoring, web site, hearbeat checks and service information.
+This apps provides basic Linux and Windows systems performance metrics, web site and heartbeat checks and service information.
 
 The App allows you to monitor Linux and Windows System using metrics. It further provides information on the service and some inventory information. Its best suited to smaller environment  where you want to monitor a small number of services. So say all your critical services as a staring point.
 
@@ -174,7 +174,8 @@ Use:
 Login to Splunk and go DC_linux_monitoring app and select dashboards, select the host and you should see the you should see data, this is providing you have installed the TA's and data is being collected and ingested correctly.
 
 Logs:
-To clear the web logs - set the below to run in cron daily 
+To clear the web logs - set the below to run in cron daily
+
 find /opt/splunk/etc/apps/DC_iops_monitoring/bin/scripts/logs/ -name "*_status.log" -type f -mtime +2 -delete
 
 Issues:
