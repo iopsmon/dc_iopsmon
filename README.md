@@ -148,6 +148,10 @@ Edit the /opt/splunk/etc/apps/DC_iops_monitoring/bin/scripts/url.conf file
 Use:
 Login to Splunk and go DC_linux_monitoring app and select dashboards, select the host and you should see the you should see data, this is providing you have installed the TA's and data is being collected and ingested correctly.
 
+Logs:
+To clear the web logs - set the below to run in cron daily 
+find /opt/splunk/etc/apps/DC_iops_monitoring/bin/scripts/logs/ -name "*_status.log" -type f -mtime +2 -delete
+
 Issues:
 
 - Ensure the app has the splunk user permissions
