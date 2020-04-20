@@ -1,0 +1,92 @@
+<dashboard theme="dark">
+  <label>Critical Server Heartbeat</label>
+  <search id="baseSearch1">
+    <query>index=ping sourcetype="ping:csv"  
+    | fields _time, server_name, short_name, ip_address, status </query>
+    <earliest>-1h@h</earliest>
+    <latest>now</latest>
+    <refresh>1m</refresh>
+    <refreshType>delay</refreshType>
+    <sampleRatio>1</sampleRatio>
+  </search>
+  <row>
+    <panel>
+      <title>Last Update Time</title>
+      <single>
+        <search base="baseSearch1">
+          <query>| eval time=strftime(_time, "%H:%M:%S %d-%m-%y")
+ | head 1 | table time</query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <title>server_up</title>
+      <single>
+        <search base="baseSearch1">
+          <query>search status=Up  | dedup ip_address |  stats count</query>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">Up</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>server_down</title>
+      <single>
+        <search base="baseSearch1">
+          <query>search status="Unreachable" | dedup server_name |  stats count</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unit">Down</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Ping Check</title>
+      <table>
+        <search>
+          <query>| inputlookup ping_col_lookup | sort -_time | dedup ip_address | fields - short_name</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>1m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <format type="color" field="status">
+          <colorPalette type="expression">if (like(value,"%Unreachable%"),"#dc4e41","#53A051")</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+</dashboard>

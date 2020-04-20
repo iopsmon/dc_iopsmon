@@ -1,0 +1,11 @@
+<nav search_view="search" color ="#800020" >
+
+<view name="win_mon" default='true'/>
+<view name="lin_mon" />
+<view name="web_mon" />
+<view name="ping_check" />
+<view name="search" />
+<view name="reports" />
+<view name="dashboards" />
+<view name="readme" />
+</nav>
