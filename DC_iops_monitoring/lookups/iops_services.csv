@@ -1,2 +1,0 @@
-it_service,host,system,ip,service_role,critical
-splunk,splunk2.ops.com,linux,192.168.1.128,aio,medium
