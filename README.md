@@ -128,6 +128,8 @@ sudo cp -R DC_iops_monitoring /opt/splunk/etc/apps
 sudo chown -R splunk:splunk /opt/splunk/etc/apps
 sudo -u splunk /opt/splunk/bin/splunk restart
 
+NOTE: If you have a distributed Splunk enviroment, you need to split out the dashboards parts and install them onto the Search heads and the remaining parts onto a Heavy Forwarder as you will need Python.
+
 Install the TA-linux-metrics to the UF (Configure the polling or  use the Deployment server for multiple server deployment)
 
 Install the Windows TA to the UF (Configure the polling or  use the Deployment server for multiple server deployment)
