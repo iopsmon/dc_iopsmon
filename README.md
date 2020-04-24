@@ -130,6 +130,23 @@ sudo -u splunk /opt/splunk/bin/splunk restart
 
 NOTE: If you have a distributed Splunk enviroment, you need to split out the dashboards parts and install them onto the Search heads and the remaining parts onto a Heavy Forwarder as you will need Python.
 
+Install Splunk Instances
+
+Search Heads Install = Yes
+
+This add-on contains search-time knowledge. It is recommended to turn visibility off on your search heads to prevent data duplication errors that can result from running inputs on your search heads instead of (or in addition to) on your data collection node.
+
+Heavy Forwarders Install = Yes
+It is recommended to install this add-on on a heavy forwarder for data collection.
+Data collection should be configured in only 1 place to avoid duplicates.
+
+Indexers Install = Not required
+Not required as the parsing operations occur on the forwarders.
+
+Universal Forwarders Install = No
+Universal forwarders are not supported for data collection because the modular inputs require Python and the Splunk REST handler.
+
+Metrics TA:
 Install the TA-linux-metrics to the UF (Configure the polling or  use the Deployment server for multiple server deployment)
 
 Install the Windows TA to the UF (Configure the polling or  use the Deployment server for multiple server deployment)
