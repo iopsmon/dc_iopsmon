@@ -121,16 +121,31 @@ Install:
 
 This app should be installed only on a Search Head, or All in one Splunk instance, the indexes.conf file needs to be deployed to the indexing layer or all in one server and the TA-linux-metrics and Windows TA's needs to be deployed to the target Linux and Windows servers.
 
-This app was only tested on Splunk on Linux
-
-Download the zip and extract the file, copy the DC_iops_monitoring folder to the Splunk Server
-sudo cp -R DC_iops_monitoring /opt/splunk/etc/apps
-sudo chown -R splunk:splunk /opt/splunk/etc/apps
-sudo -u splunk /opt/splunk/bin/splunk restart
+This app was only tested on Splunk 8.0 and Linux Centos 8.1
 
 NOTE: If you have a distributed Splunk enviroment, you need to split out the dashboards parts and install them onto the Search heads and the remaining parts onto a Heavy Forwarder as you will need Python.
 
-Install Splunk Instances
+There are TWO folders, one is the TA and the other is the APP, this allows you split the config for a distributed  enviroment. If you have an all in one then install both on the same server.
+
+Download the master zip and extract the file, copy the DC_TA_iops_monitoring to the Heavy Forwarder, as this uses python scripts.Copy the DC_APP_iops_monitoring to the Search Head as this contains the dashboards and knowledge objects
+
+Heavy Forwarder Install Steps
+sudo cp -R DC_TA_iops_monitoring /opt/splunk/etc/apps
+sudo chown -R splunk:splunk /opt/splunk/etc/apps
+sudo -u splunk /opt/splunk/bin/splunk restart
+
+Search Head Install Steps
+sudo cp -R DC_APP_iops_monitoring /opt/splunk/etc/apps
+sudo chown -R splunk:splunk /opt/splunk/etc/apps
+sudo -u splunk /opt/splunk/bin/splunk restart
+
+AIO Install Steps
+sudo cp -R DC_TA_iops_monitoring /opt/splunk/etc/apps
+sudo cp -R DC_APP_iops_monitoring /opt/splunk/etc/apps
+sudo chown -R splunk:splunk /opt/splunk/etc/apps
+sudo -u splunk /opt/splunk/bin/splunk restart
+
+Install Splunk Instances Notes
 
 Search Heads Install = Yes
 
