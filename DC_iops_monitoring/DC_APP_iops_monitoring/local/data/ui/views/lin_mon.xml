@@ -1,0 +1,390 @@
+<form theme="dark">
+  <label>Linux System Performance Metrics</label>
+  <fieldset submitButton="false">
+    <input type="time" searchWhenChanged="true" token="global_time_tok">
+      <label>Time Range</label>
+      <default>
+        <earliest>-1h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="global_host_tok" searchWhenChanged="true">
+      <label>Linux Host</label>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search>
+        <query>| mcatalog values(host) WHERE index="linux_metric"  GROUPBY host
+| table host</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+      <choice value="$global_host_tok$">host</choice>
+    </input>
+    <input type="dropdown">
+      <label>Time Span</label>
+      <choice value="auto">auto</choice>
+      <choice value="5s">5s</choice>
+      <choice value="10s">10s</choice>
+      <choice value="30s">30s</choice>
+      <choice value="1m">1m</choice>
+      <choice value="5m">5m</choice>
+      <choice value="10m">10m</choice>
+      <choice value="30m">30m</choice>
+      <choice value="1h">1h</choice>
+      <default>auto</default>
+      <change>
+        <eval token="timechart_span">if($value$ == "auto", "", "span=".$value$)</eval>
+        <eval token="mstats_span">"span=".$value$</eval>
+        <eval token="host">"host="$value$</eval>
+      </change>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>service</title>
+      <table>
+        <search>
+          <query>| mcatalog values(host) WHERE index="linux_metric" AND host=$global_host_tok$  BY host
+| lookup iops_services host OUTPUT it_service, critical, host, ip, service_role, system
+| table it_service, critical, host, ip, service_role, system</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>cpu_avg</title>
+      <single>
+        <search>
+          <query>| mstats avg(_value)  prestats=true WHERE metric_name="cpu.system" AND index="linux_metric" AND host=$global_host_tok$ span=120s by host
+| stats avg(_value) AS cpu_avg  BY  host
+| eval cpu_avg=round(cpu_avg)
+| fields - host</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[70,80]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="underLabel">cpu_avg</option>
+        <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>free_mem</title>
+      <single>
+        <search>
+          <query>| mstats avg(_value)  prestats=true WHERE metric_name="memory.free" AND index ="linux_metric" AND host=$global_host_tok$ span=120s by host
+| stats avg(_value) AS freem_mem  BY  host
+| eval free_mem=round(free_mem)
+| fields - host</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xf1813f","0x53a051"]</option>
+        <option name="rangeValues">[3,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">free_mem</option>
+        <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>cpu.system $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="cpu.system" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>load.longterm $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="load.longterm" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>memory.used $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="memory.used" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>memory.free $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="memory.free" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>df.free $global_host_tok$</title>
+        <search>
+          <query>| mstats max(_value) prestats=true WHERE metric_name="df.free" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart max(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","Max":"#f2b827","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","Max":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>disk.io_time.io_time $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="disk.io_time.io_time" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>interface.packets.rx $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="interface.packets.rx" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) AS Avg $timechart_span$
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>interface.packets.tx $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="interface.packets.tx" AND index="linux_metric" span=10s AND host=$global_host_tok$
+| timechart avg(_value) span=10s 
+| fields - _span*</query>
+          <earliest>-1h</earliest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>processmon.cpu.percent $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="processmon.cpu.percent" AND index="linux_metric" $mstats_span$ AND host=$global_host_tok$
+| timechart avg(_value) $timechart_span$ 
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","splunk2.ops.com":"#1e93c6"}</option>
+        <option name="charting.gridLinesX.showMajorLines">true</option>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">true</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","splunk2.ops.com":"solid"}</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>swap</title>
+      <chart>
+        <title>swap.used $global_host_tok$</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="swap.used" AND index="linux_metric" span=10s AND  host=$global_host_tok$
+| timechart avg(_value) AS Avg span=10s
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>basic inventory</title>
+      <table>
+        <search>
+          <query>| tstats count AS "Count of OS" from datamodel=Compute_Inventory where (nodename = All_Inventory.OS) (All_Inventory.family="*Linux*") (host=$global_host_tok$) by host, All_Inventory.OS.os prestats=true 
+| stats dedup_splitvals=t count AS "Count of OS" by host, All_Inventory.OS.os | sort limit=100 host | fields - _span 
+| rename All_Inventory.OS.os AS os | fields host, os, 
+
+| join [
+| tstats count AS "Count of Memory" from datamodel=Compute_Inventory where (nodename = All_Inventory.Memory) (host=$global_host_tok$) by host, All_Inventory.Memory.mem prestats=true 
+| stats dedup_splitvals=t count AS "Count of Memory" by host, All_Inventory.Memory.mem | sort limit=100 host | fields - _span | rename All_Inventory.Memory.mem AS mem 
+| fields host, mem
+]
+| join [
+
+| tstats summariesonly=true  count AS "Count of CPU" from datamodel=Compute_Inventory where (nodename = All_Inventory.CPU) (host=$global_host_tok$) by host, All_Inventory.CPU.cpu_cores prestats=true 
+| stats dedup_splitvals=t count AS "Count of CPU" by host, All_Inventory.CPU.cpu_cores | sort limit=100 host | fields - _span | rename All_Inventory.CPU.cpu_cores AS cpu_cores 
+| fields host, cpu_cores 
+]
+
+| table host, os, cpu_cores, mem,</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>
