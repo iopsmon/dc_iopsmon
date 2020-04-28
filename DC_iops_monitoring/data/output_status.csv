@@ -1,3 +1,0 @@
-date,server_name,short_name,status,ip_address
-20 04 2020 10:00:00,splunk2.ops.com,splunk2.ops.com,Up,192.168.1.128
-20 04 2020 10:00:00,splunk1.ops.com,splunk1.ops.com,Unreachable,192.168.1.127
