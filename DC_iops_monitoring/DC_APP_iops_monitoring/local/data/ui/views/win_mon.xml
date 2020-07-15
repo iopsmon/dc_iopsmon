@@ -1,5 +1,29 @@
 <form theme="dark">
   <label>Windows System Performance Metrics</label>
+   <row>
+    <panel>
+      <!-- This changes the font sizes -->
+      <html>
+        <style>
+          table tbody tr td{
+            font-size:120% !important;
+            }
+          table thead tr th{
+          font-size:120% !important;
+          }
+       
+         table th td {
+         color:#b3b300;
+        
+         }
+          table tr td {
+         color:#b3b300;
+         }
+     
+      </style>
+      </html>
+    </panel>
+  </row>
   <fieldset submitButton="false">
     <input type="time" searchWhenChanged="true" token="global_time_tok">
       <label>Time Range</label>

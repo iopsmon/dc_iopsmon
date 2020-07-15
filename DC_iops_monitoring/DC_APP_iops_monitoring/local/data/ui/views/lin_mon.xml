@@ -41,20 +41,45 @@
   </fieldset>
   <row>
     <panel>
+      <!-- This changes the font sizes -->
+      <html>
+        <style>
+          table tbody tr td{
+            font-size:120% !important;
+            }
+          table thead tr th{
+          font-size:120% !important;
+          }
+       
+         table th td {
+         color:#b3b300;
+        
+         }
+          table tr td {
+         color:#b3b300;
+         }
+     
+      </style>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <title>service</title>
       <table>
         <search>
           <query>| mcatalog values(host) WHERE index="linux_metric" AND host=$global_host_tok$  BY host
 | lookup iops_services host OUTPUT it_service, critical, host, ip, service_role, system
 | table it_service, critical, host, ip, service_role, system</query>
-          <earliest>$global_time_tok.earliest$</earliest>
-          <latest>$global_time_tok.latest$</latest>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
           <sampleRatio>1</sampleRatio>
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
         <option name="drilldown">none</option>
         <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
