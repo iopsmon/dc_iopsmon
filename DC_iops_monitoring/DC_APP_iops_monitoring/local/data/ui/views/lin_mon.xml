@@ -18,7 +18,6 @@
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
-      <choice value="$global_host_tok$">host</choice>
     </input>
     <input type="dropdown">
       <label>Time Span</label>
