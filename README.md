@@ -65,7 +65,7 @@ You can add a some web sites to the configuration and the app will poll every 5 
 
 Critical Server Hearbeat Check:
 
-YOu can add critical servers to a list and the app will run regular ping checks to check for an updown status. 
+You can add critical servers to a list and the app will run regular ping checks to check for an updown status. 
 
 ![](images/ping.jpg)
 
