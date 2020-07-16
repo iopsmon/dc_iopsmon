@@ -17,6 +17,7 @@ Application Features:
 - Add service level information to host metric dashboard, which provides context
 - Monitors URLS - basic up / down status
 - Monitors Critical servers - Ping check
+- Events Page - Shows alerts from system resources
 
 Metrics Overview:
 
@@ -67,6 +68,12 @@ Critical Server Hearbeat Check:
 YOu can add critical servers to a list and the app will run regular ping checks to check for an updown status. 
 
 ![](images/ping.jpg)
+
+Events:
+
+This shows alerts from system resources CPU/MEM/DISK
+
+![](images/events.jpg)
 
 Data Config:
 
