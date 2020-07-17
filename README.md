@@ -190,6 +190,9 @@ Example - Add the below assets to the csv file - base this on your enviroment
 
 NOTE:Please note the host names in the metrics dashboard drop down mush match the host name in the csv file
 
+Alert Thresholds Config:
+To configure the performance alert thresholds, edit the /opt/splunk/etc/apps/DC_APP_iops_monitoring/local/savedsearches.conf file, locate the  "| where threshold" section for each alert, and change the threshold value, I have intially set these to extream highs and lows so as to get alerts coming through, this shows its working, and requires you to tune them for the settings you want. Study the average baselines in your enviroment, and use this to set the threholds.   
+
 Data model - optional
 Accelerate the Compute_Inventory and add the index's that store the CIM complaint data for Linux and Windows servers, the TA's required for these are listed below (These are NOT the metrics indexes), these require considerations for the indexes and collects
 
