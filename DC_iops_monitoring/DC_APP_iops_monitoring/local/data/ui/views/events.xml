@@ -35,13 +35,13 @@
   </row>
   <row>
     <panel>
-      <title>Linux Events</title>
+      <title>Events</title>
       <table>
         <search>
           <query>index=iops_alerts 
+| rename orig_host AS host 
 | fields _time, host, alert_name severity message threshold  
-| table _time, host alert_name severity message threshold
-| reverse</query>
+| table _time, host alert_name severity message threshold</query>
           <earliest>$my_time.earliest$</earliest>
           <latest>$my_time.latest$</latest>
           <sampleRatio>1</sampleRatio>
