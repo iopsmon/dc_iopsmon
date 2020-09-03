@@ -1,6 +1,15 @@
 <dashboard theme="dark">
   <label>Critical Server Heartbeat</label>
-   <row>
+  <search id="baseSearch1">
+    <query>index=ping sourcetype="ping:csv"  
+    | fields _time, server_name, short_name, ip_address, status </query>
+    <earliest>-1h@h</earliest>
+    <latest>now</latest>
+    <refresh>1m</refresh>
+    <refreshType>delay</refreshType>
+    <sampleRatio>1</sampleRatio>
+  </search>
+  <row>
     <panel>
       <!-- This changes the font sizes -->
       <html>
@@ -24,15 +33,6 @@
       </html>
     </panel>
   </row>
-  <search id="baseSearch1">
-    <query>index=ping sourcetype="ping:csv"  
-    | fields _time, server_name, short_name, ip_address, status </query>
-    <earliest>-1h@h</earliest>
-    <latest>now</latest>
-    <refresh>1m</refresh>
-    <refreshType>delay</refreshType>
-    <sampleRatio>1</sampleRatio>
-  </search>
   <row>
     <panel>
       <title>Last Update Time</title>
@@ -92,7 +92,9 @@
       <title>Ping Check</title>
       <table>
         <search>
-          <query>| inputlookup ping_col_lookup | sort -_time | dedup ip_address | fields - short_name</query>
+          <query>| inputlookup ping_col_lookup  
+| search ip_address!=ip_address OR server_name!=server_name 
+| sort -_time | dedup ip_address | fields - short_name</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
           <sampleRatio>1</sampleRatio>
